@@ -1,39 +1,20 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 class UserControllerTest {
-    private static GsonBuilder gsonBuilder;
-    private static Gson gson;
-    private HttpClient client = HttpClient.newHttpClient();
-    ;
-    private URI uri = URI.create("http://localhost:8080/users");
-    private HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
     private UserController userController;
     User user;
-
-    @BeforeAll
-    public static void beforeAll() {
-        gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDate.class, new LocalDateAdapter());
-        gson = gsonBuilder.create();
-    }
 
     @BeforeEach
     public void beforeEach() {
@@ -41,160 +22,104 @@ class UserControllerTest {
     }
 
     @Test
-    public void getAllUsers() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(200, response.statusCode());
-        assertNotNull(response, "Данные не получены");
+    public void getAllUsers() {
+        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
+        user.setName("Vasiliy");
+        User test = userController.postUser(user);
+        List<User> listUsers = userController.getUsers();
+        assertEquals(test, listUsers.get(0), "Данные не получены");
+        assertEquals(1, listUsers.size(), "Данные не получены");
     }
 
     @Test
-    public void postUser() throws IOException, InterruptedException {
+    public void postUser() {
         user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(200, response.statusCode());
-        assertEquals(test, response.body(), "Данные не получены");
+        User test = userController.postUser(user);
+        assertEquals(test, user, "Данные не получены");
     }
 
     @Test
-    public void postUserEmailEmpty() throws IOException, InterruptedException {
+    public void postUserEmailEmpty() {
         user = new User("Vasilek", "", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(400, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.postUser(user);
+        });
+        Assertions.assertEquals("400 BAD_REQUEST \"E-mail не корректный. Попробуйте еще раз.\"", exeption.getMessage());
     }
 
     @Test
-    public void postUserEmailWithout() throws IOException, InterruptedException {
+    public void postUserEmailWithout() {
         user = new User("Vasilek", "vasya-vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(400, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.postUser(user);
+        });
+        Assertions.assertEquals("400 BAD_REQUEST \"E-mail не корректный. Попробуйте еще раз.\"", exeption.getMessage());
     }
 
     @Test
-    public void postUserLoginEmpty() throws IOException, InterruptedException {
+    public void postUserLoginEmpty() {
         user = new User("", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(400, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.postUser(user);
+        });
+        Assertions.assertEquals("400 BAD_REQUEST \"Логин не может быть пустым или содержать пробелы.\"", exeption.getMessage());
     }
 
     @Test
-    public void postUserLoginWithSpace() throws IOException, InterruptedException {
+    public void postUserLoginWithSpace() {
         user = new User("Vasil ek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(400, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.postUser(user);
+        });
+        Assertions.assertEquals("400 BAD_REQUEST \"Логин не может быть пустым или содержать пробелы.\"", exeption.getMessage());
     }
 
     @Test
-    public void postUserWithoutName() throws IOException, InterruptedException {
+    public void postUserWithoutName() {
         user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(200, response.statusCode());
-        User user1 = gson.fromJson(response.body(), User.class);
-        assertEquals("Vasilek", user1.getName(), "Данные не получены");
+        user.setId(1);
+        User test = userController.postUser(user);
+        user.setName("Vasilek");
+        assertEquals(test, user, "Данные не получены");
     }
 
     @Test
-    public void postUserBirthdayInFuture() throws IOException, InterruptedException {
+    public void postUserBirthdayInFuture() {
         user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(2099, 9, 9));
         user.setName("Vasiliy");
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(400, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.postUser(user);
+        });
+        Assertions.assertEquals("400 BAD_REQUEST \"Дата рождения не может быть позже текущей даты.\"", exeption.getMessage());
     }
 
     @Test
-    public void putUser() throws IOException, InterruptedException {
+    public void putUser() {
         user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .PUT(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(200, response.statusCode());
-        assertEquals(test, response.body(), "Данные не получены");
+        User test = userController.putUser(user);
+        assertEquals(test, user, "Данные не получены");
     }
 
     @Test
-    public void putUserIdIncorrect() throws IOException, InterruptedException {
+    public void putUserIdIncorrect() {
         user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
         user.setName("Vasiliy");
         user.setId(-1);
-        String test = gson.toJson(user);
-        HttpRequest request = HttpRequest.newBuilder()
-                .PUT(HttpRequest.BodyPublishers.ofString(test))
-                .uri(uri)
-                .version(HttpClient.Version.HTTP_1_1)
-                .header("Content-Type", "application/json")
-                .build();
-        HttpResponse<String> response = client.send(request, handler);
-        assertEquals(404, response.statusCode());
+        ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            User test = userController.putUser(user);
+        });
+        Assertions.assertEquals("404 NOT_FOUND \"Некорректный id. Попробуйте еще раз.\"", exeption.getMessage());
     }
 }

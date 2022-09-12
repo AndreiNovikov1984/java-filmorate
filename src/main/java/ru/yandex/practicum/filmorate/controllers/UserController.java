@@ -38,7 +38,7 @@ public class UserController {
         if ((user.getLogin() == null) || (user.getLogin().contains(" ")) || (user.getLogin().equals("null")) ||
                 (user.getLogin().equals(""))) {
             log.warn("Ошибка в логине - {}", user.getLogin());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Логин не может быть пустым.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Логин не может быть пустым или содержать пробелы.");
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Дата рождения из будущего");
