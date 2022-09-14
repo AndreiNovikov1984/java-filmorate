@@ -14,17 +14,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserControllerTest {
     private UserController userController;
-    User user;
+    private User user;
 
     @BeforeEach
     public void beforeEach() {
         userController = new UserController();
+        user = User.builder()
+                .login("Vasilek")
+                .name("Vasiliy")
+                .email("vasya@vasiliy.ru")
+                .birthday(LocalDate.of(1999, 9, 9))
+                .build();
     }
+
 
     @Test
     public void getAllUsers() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
         User test = userController.postUser(user);
         List<User> listUsers = userController.getUsers();
         assertEquals(test, listUsers.get(0), "Данные не получены");
@@ -33,18 +38,13 @@ class UserControllerTest {
 
     @Test
     public void postUser() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
-        user.setId(1);
         User test = userController.postUser(user);
         assertEquals(test, user, "Данные не получены");
     }
 
     @Test
     public void postUserEmailEmpty() {
-        user = new User("Vasilek", "", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
-        user.setId(1);
+        user.setEmail("");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.postUser(user);
         });
@@ -53,9 +53,7 @@ class UserControllerTest {
 
     @Test
     public void postUserEmailWithout() {
-        user = new User("Vasilek", "vasya-vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
-        user.setId(1);
+        user.setEmail("vasya-vasiliy.ru");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.postUser(user);
         });
@@ -64,9 +62,7 @@ class UserControllerTest {
 
     @Test
     public void postUserLoginEmpty() {
-        user = new User("", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
-        user.setId(1);
+        user.setLogin("");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.postUser(user);
         });
@@ -75,9 +71,7 @@ class UserControllerTest {
 
     @Test
     public void postUserLoginWithSpace() {
-        user = new User("Vasil ek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
-        user.setId(1);
+        user.setLogin("Vasil ek");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.postUser(user);
         });
@@ -86,17 +80,14 @@ class UserControllerTest {
 
     @Test
     public void postUserWithoutName() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setId(1);
+        user.setName("");
         User test = userController.postUser(user);
-        user.setName("Vasilek");
         assertEquals(test, user, "Данные не получены");
     }
 
     @Test
     public void postUserBirthdayInFuture() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(2099, 9, 9));
-        user.setName("Vasiliy");
+        user.setBirthday(LocalDate.of(2099, 9, 9));
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.postUser(user);
         });
@@ -105,8 +96,7 @@ class UserControllerTest {
 
     @Test
     public void putUser() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
+        userController.putUser(user);
         user.setId(1);
         User test = userController.putUser(user);
         assertEquals(test, user, "Данные не получены");
@@ -114,8 +104,6 @@ class UserControllerTest {
 
     @Test
     public void putUserIdIncorrect() {
-        user = new User("Vasilek", "vasya@vasiliy.ru", LocalDate.of(1999, 9, 9));
-        user.setName("Vasiliy");
         user.setId(-1);
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             User test = userController.putUser(user);

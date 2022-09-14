@@ -14,16 +14,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FilmControllerTest {
 
     private FilmController filmController;
-    Film film;
+    private Film film;
 
     @BeforeEach
     public void beforeEach() {
         filmController = new FilmController();
+        film = Film.builder()
+                .name("Vasiliy")
+                .description("Vasiliy..")
+                .releaseDate(LocalDate.of(1999, 9, 9))
+                .duration(190)
+                .build();
     }
 
     @Test
     public void getAllFilms() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1999, 9, 9), 190);
         Film test = filmController.postFilm(film);
         List<Film> listFilms = filmController.getFilms();
         assertEquals(test, listFilms.get(0), "Данные не получены");
@@ -32,15 +37,13 @@ public class FilmControllerTest {
 
     @Test
     public void postFilm() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1999, 9, 9), 190);
-        film.setId(1);
         Film test = filmController.postFilm(film);
         assertEquals(test, film, "Данные не получены");
     }
 
     @Test
     public void postFilmNameEmpty() {
-        film = new Film("", "Vasiliy..", LocalDate.of(1999, 9, 9), 190);
+        film.setName("");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             Film test = filmController.postFilm(film);
         });
@@ -49,9 +52,9 @@ public class FilmControllerTest {
 
     @Test
     public void postFilmDescriptionLong() {
-        film = new Film("Vasiliy", "Vasiliy Vasilievich Vasiliev get to meet Ivan Ivanovich Ivanov. " +
+        film.setDescription("Vasiliy Vasilievich Vasiliev get to meet Ivan Ivanovich Ivanov. " +
                 "They are meeting in the Ivanov city on the Vasilievskaya street. They were very happy to meet each " +
-                "other. And they lived happily ever after", LocalDate.of(1999, 9, 9), 190);
+                "other. And they lived happily ever after");
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             Film test = filmController.postFilm(film);
         });
@@ -61,7 +64,7 @@ public class FilmControllerTest {
 
     @Test
     public void postFilmReleaseDateEarly() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1099, 9, 9), 190);
+        film.setReleaseDate(LocalDate.of(1099, 9, 9));
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             Film test = filmController.postFilm(film);
         });
@@ -70,7 +73,7 @@ public class FilmControllerTest {
 
     @Test
     public void postFilmDurationNegative() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1999, 9, 9), -20);
+        film.setDuration(-20);
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             Film test = filmController.postFilm(film);
         });
@@ -79,7 +82,7 @@ public class FilmControllerTest {
 
     @Test
     public void putFilm() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1999, 9, 9), 190);
+        filmController.postFilm(film);
         film.setId(1);
         Film test = filmController.putFilm(film);
         assertEquals(test, film, "Данные не получены");
@@ -87,7 +90,6 @@ public class FilmControllerTest {
 
     @Test
     public void putFilmIdIncorrect() {
-        film = new Film("Vasiliy", "Vasiliy..", LocalDate.of(1999, 9, 9), 190);
         film.setId(-1);
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             Film test = filmController.putFilm(film);
