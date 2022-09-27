@@ -2,12 +2,14 @@ package ru.yandex.practicum.filmorate.support;
 
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+@Service
 public class Validation {
 
     public static boolean validationFilm(Film film, Logger log) {
