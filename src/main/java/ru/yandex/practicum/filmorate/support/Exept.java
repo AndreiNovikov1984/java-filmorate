@@ -7,9 +7,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 @ControllerAdvice
 public class Exept {
+
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleException(ResponseStatusException e) {
         return new ResponseEntity<>(e.getMessage(), e.getStatus());
+
+
     }
+
 
 }

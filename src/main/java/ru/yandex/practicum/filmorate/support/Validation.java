@@ -1,16 +1,21 @@
 package ru.yandex.practicum.filmorate.support;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+@Service
 public class Validation {
+    private static final Logger log = LoggerFactory.getLogger("Validation");
 
-    public static boolean validationFilm(Film film, Logger log) {
+
+    public static boolean validationFilm(Film film) {
         boolean answer = false;
         if ((film.getName() == null) || (film.getName().equals("")) || (film.getName().equals("null"))) {
             log.warn("Пустое название");
@@ -36,7 +41,7 @@ public class Validation {
         return answer;
     }
 
-    public static boolean validationUser(User user, Logger log) {
+    public static boolean validationUser(User user) {
         boolean answer = false;
         if ((user.getEmail() == null) || (user.getEmail().equals("")) || (user.getEmail().equals("null")) ||
                 (!user.getEmail().contains("@"))) {
