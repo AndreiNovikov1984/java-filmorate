@@ -1,0 +1,74 @@
+create table IF NOT EXISTS USERS
+(
+    USER_ID    INTEGER auto_increment
+        primary key,
+    USER_LOGIN CHARACTER VARYING(50) not null
+        unique,
+    USER_NAME  CHARACTER VARYING(50) not null,
+    USER_EMAIL CHARACTER VARYING(70) not null
+        unique,
+    BIRTHDATE  DATE                  not null
+);
+
+create table IF NOT EXISTS FILMS_RATING
+(
+    RATING_ID   INTEGER primary key,
+    RATING_NAME CHARACTER VARYING(50) not null
+);
+
+create table IF NOT EXISTS GENRES
+(
+    GENRE_ID   INTEGER primary key,
+    GENRE_NAME CHARACTER VARYING(50) not null
+);
+
+create table IF NOT EXISTS FILMS
+(
+    FILM_ID      INTEGER auto_increment
+        primary key,
+    FILM_NAME    CHARACTER VARYING(50) not null,
+    DESCRIPTION  CHARACTER VARYING(200),
+    RELEASE_DATE DATE,
+    DURATION     INTEGER,
+    RATING_ID    INTEGER,
+    constraint FILMS_FILMS_RATING_RATING_ID_FK
+        foreign key (RATING_ID) references FILMS_RATING
+);
+
+create table IF NOT EXISTS FILMS_GENRE
+(
+    FILMS_GENRE_ID INTEGER auto_increment
+        primary key,
+    FILMS_ID       INTEGER,
+    GENRE_ID       INTEGER,
+    GENRE_NAME     CHARACTER VARYING(50) not null,
+    constraint FILMS_GENRE_FILMS_FILM_ID_FK
+        foreign key (FILMS_ID) references FILMS,
+    constraint FILMS_GENRE_GENRE_GENRE_ID_FK
+        foreign key (GENRE_ID) references GENRES
+);
+
+create table IF NOT EXISTS FILMS_LIKES
+(
+    FILMS_LIKES_ID INTEGER auto_increment
+        primary key,
+    FILM_ID        INTEGER,
+    USER_ID        INTEGER,
+    constraint FILMS_LIKES_FILMS_FILMS_ID_FK
+        foreign key (FILM_ID) references FILMS,
+    constraint FILMS_LIKES_USERS_USERS_ID_FK
+        foreign key (USER_ID) references USERS
+);
+
+create table IF NOT EXISTS FRIENDS
+(
+    FRIENDS_ID        INTEGER auto_increment
+        primary key,
+    USER_ID           INTEGER,
+    FRIEND_ID         INTEGER,
+    FRIENDSHIP_STATUS BOOLEAN,
+    constraint FRIENDS_USERS_USER_ID_FK
+        foreign key (USER_ID) references USERS,
+    constraint FRIENDS_USERS_USER_ID_FK_2
+        foreign key (FRIENDS_ID) references USERS
+);

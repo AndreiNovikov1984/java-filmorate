@@ -4,7 +4,9 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -16,4 +18,6 @@ public class Film {
     private LocalDate releaseDate;
     private Integer duration;
     final private Set<Integer> likes = new HashSet<>();
+    final private List<String> genre = new ArrayList<>();
+    final private String rating;
 }
