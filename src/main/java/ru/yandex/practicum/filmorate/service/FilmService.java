@@ -41,7 +41,8 @@ public class FilmService {
                     int comp = (p1.getLikes().size() - (p0.getLikes().size()));
                     return comp;
                 })
-                .limit(count).collect(Collectors.toList());
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     public Film postFilm(Film film) {       // метод добавления фильма
