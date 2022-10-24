@@ -17,7 +17,7 @@ public class User {
     private String name;
     private String email;
     private LocalDate birthday;
-    final private Set<Integer> friends = new HashSet<>();
+    private Set<Integer> friends = new HashSet<>();
 //    final private Map<Integer,Boolean> friends = new HashMap<>();
 
 }

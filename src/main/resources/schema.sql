@@ -2,8 +2,10 @@ DROP TABLE IF EXISTS USERS cascade;
 DROP TABLE IF EXISTS FILMS_RATING cascade;
 DROP TABLE IF EXISTS GENRES cascade;
 DROP TABLE IF EXISTS FILMS cascade;
-DROP TABLE IF EXISTS FILMS_GENRE cascade;
+DROP TABLE IF EXISTS FILMS_GENRES cascade;
 DROP TABLE IF EXISTS FILMS_LIKES cascade;
+DROP TABLE IF EXISTS FRIENDS cascade;
+
 
 create table IF NOT EXISTS USERS
 (
@@ -42,15 +44,15 @@ create table IF NOT EXISTS FILMS
         foreign key (RATING_ID) references FILMS_RATING
 );
 
-create table IF NOT EXISTS FILMS_GENRE
+create table IF NOT EXISTS FILMS_GENRES
 (
     FILMS_GENRE_ID INTEGER auto_increment
         primary key,
     FILMS_ID       INTEGER,
     GENRE_ID       INTEGER,
-    constraint FILMS_GENRE_FILMS_FILM_ID_FK
+    constraint FILMS_GENRES_FILMS_FILM_ID_FK
         foreign key (FILMS_ID) references FILMS,
-    constraint FILMS_GENRE_GENRES_GENRE_ID_FK
+    constraint FILMS_GENRES_GENRES_GENRE_ID_FK
         foreign key (GENRE_ID) references GENRES
 );
 
@@ -76,5 +78,5 @@ create table IF NOT EXISTS FRIENDS
     constraint FRIENDS_USERS_USER_ID_FK
         foreign key (USER_ID) references USERS,
     constraint FRIENDS_USERS_USER_ID_FK_2
-        foreign key (FRIENDS_ID) references USERS
+        foreign key (FRIEND_ID) references USERS
 );

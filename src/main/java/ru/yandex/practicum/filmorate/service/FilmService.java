@@ -21,12 +21,10 @@ public class FilmService {
     private final UserStorage userStorage;
 
     public Collection<Film> getFilms() {        // метод получения списка фильмов
-        log.debug("Вывод списка фильмов из хранилища");
         return filmStorage.getFilms();
     }
 
     public Film getFilmById(int id) {           // метод получения фильма по Id
-        log.debug("Успешный вывод фильма ID = {}", id);
         return filmStorage.getFilmById(id);
     }
 
@@ -35,7 +33,7 @@ public class FilmService {
             log.warn("Передана некорректная длина списка count = {} ", count);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Длина списка не может быть меньше 0");
         }
-        log.debug("Вывод списка самых популярных фильмов длиной {} ", count);
+        log.info("Вывод списка самых популярных фильмов длиной {} ", count);
         return filmStorage.getFilms().stream()
                 .sorted((p0, p1) -> {
                     int comp = (p1.getLikes().size() - (p0.getLikes().size()));
@@ -47,26 +45,26 @@ public class FilmService {
 
     public Film postFilm(Film film) {       // метод добавления фильма
         Film postFilm = filmStorage.addFilm(film);
-        log.debug("Фильм ID = {} успешно добавлен в хранилище", postFilm.getId());
+        log.info("Фильм ID = {} успешно добавлен в хранилище", postFilm.getId());
         return postFilm;
     }
 
     public Film putFilm(Film film) {        // метод обновления фильма
         Film putFilm = filmStorage.refreshFilm(film);
-        log.debug("Фильм ID = {} обновлен/добавлен в хранилище", film.getId());
+        log.info("Фильм ID = {} обновлен/добавлен в хранилище", film.getId());
         return putFilm;
     }
 
     public void addLike(Integer filmId, Integer userID) {       // метод добавления лайка
         validationId(filmId, userID);
         filmStorage.getFilmById(filmId).getLikes().add(userID);
-        log.debug("Лайк пользователя ID = {} фильму ID = {} добавлен", userID, filmId);
+        log.info("Лайк пользователя ID = {} фильму ID = {} добавлен", userID, filmId);
     }
 
     public void deleteLike(Integer filmId, Integer userID) {     // метод удаления лайка
         validationId(filmId, userID);
         filmStorage.getFilmById(filmId).getLikes().remove(userID);
-        log.debug("Лайк пользователя ID = {} у фильма ID = {} удален", userID, filmId);
+        log.info("Лайк пользователя ID = {} у фильма ID = {} удален", userID, filmId);
     }
 
     private void validationId(Integer filmId, Integer userID) {     //метод валидации Id фильма и пользователя
@@ -78,6 +76,6 @@ public class FilmService {
             log.warn("Передан некорректный ID {}", userID);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Некорректный id. Попробуйте еще раз.");
         }
-        log.debug("Проверка по ID пройдена");
+        log.info("Проверка по ID пройдена");
     }
 }
