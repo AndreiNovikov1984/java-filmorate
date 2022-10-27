@@ -38,22 +38,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")            // метод получения друзей пользователя
-    public Set<User> getUsersFriends(@PathVariable Integer id) {
+    public Collection<User> getUsersFriends(@PathVariable Integer id) {
         return userService.getUsersFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")       // метод получения совпадающих друзей пользователей
-    public Set<User> getUsersMutualFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public Collection<User> getUsersMutualFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         return userService.getUsersMutualFriends(id, otherId);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) { // метод добавления друзей
+    @PutMapping("/{id}/friends/{friendId}")             // метод добавления друзей
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         userService.addFriend(id, friendId);
     }
 
-    @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {  // метод удаления друзей
+    @DeleteMapping("/{id}/friends/{friendId}")          // метод удаления друзей
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         userService.deleteFriend(id, friendId);
     }
 }

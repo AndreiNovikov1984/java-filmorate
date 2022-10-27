@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -11,15 +10,11 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger("UserService");
-    @Qualifier("UserDbStorage")
     private final UserStorage userStorage;
 
     public Collection<User> getUsers() {    // метод получения списка пользователей
@@ -44,40 +39,27 @@ public class UserService {
         return putUser;
     }
 
-    public Set<User> getUsersFriends(Integer userId) {      // метод получения друзей пользователя
+    public Collection<User> getUsersFriends(Integer userId) {      // метод получения друзей пользователя
         validationId(userId);
-        Set<User> friends = new HashSet<>();
-        for (int num : userStorage.getUserById(userId).getFriends()) {
-            friends.add(userStorage.getUserById(num));
-        }
         log.debug("Информация о друзьях пользователя ID = {} успешно передана", userId);
-        return friends;
+        return userStorage.getUsersFriends(userId);
     }
 
-    public Set<User> getUsersMutualFriends(Integer userId, Integer otherId) {   // метод получения совпадающих друзей пользователей
+    public Collection<User> getUsersMutualFriends(Integer userId, Integer otherId) {   // метод получения совпадающих друзей пользователей
         validationId(userId, otherId);
-        Set<Integer> mutual = new HashSet<>();
-        Set<User> mutualFriends = new HashSet<>();
-        mutual.addAll(userStorage.getUserById(userId).getFriends());
-        mutual.retainAll(userStorage.getUserById(otherId).getFriends());
-        for (int num : mutual) {
-            mutualFriends.add(userStorage.getUserById(num));
-        }
         log.debug("Информация о совпадающих друзьях пользователя ID = {} и ID = {} передана", userId, otherId);
-        return mutualFriends;
+        return userStorage.getUsersMutualFriends(userId, otherId);
     }
 
     public void addFriend(Integer userId, Integer friendId) {       // метод добавления друзей
         validationId(userId, friendId);
-        userStorage.getUserById(userId).getFriends().add(friendId);
-        userStorage.getUserById(friendId).getFriends().add(userId);
+        userStorage.addFriend(userId, friendId);
         log.debug("Информация о друзьях пользователя ID = {} успешно добавлена", userId);
     }
 
     public void deleteFriend(Integer userId, Integer friendId) {    // метод удаления друзей
         validationId(userId, friendId);
-        userStorage.getUserById(userId).getFriends().remove(friendId);
-        userStorage.getUserById(friendId).getFriends().remove(userId);
+        userStorage.deleteFriend(userId, friendId);
         log.debug("Информация о друзьях пользователя ID = {} удалена", userId);
     }
 

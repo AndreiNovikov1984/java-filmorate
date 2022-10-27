@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
@@ -26,6 +27,7 @@ public class FilmControllerTest {
                 .description("Vasiliy..")
                 .releaseDate(LocalDate.of(1999, 9, 9))
                 .duration(190)
+                .mpa(new Mpa(1, "G"))
                 .build();
     }
 

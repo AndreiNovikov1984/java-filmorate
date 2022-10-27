@@ -48,10 +48,10 @@ create table IF NOT EXISTS FILMS_GENRES
 (
     FILMS_GENRE_ID INTEGER auto_increment
         primary key,
-    FILMS_ID       INTEGER,
+    FILM_ID       INTEGER,
     GENRE_ID       INTEGER,
     constraint FILMS_GENRES_FILMS_FILM_ID_FK
-        foreign key (FILMS_ID) references FILMS,
+        foreign key (FILM_ID) references FILMS,
     constraint FILMS_GENRES_GENRES_GENRE_ID_FK
         foreign key (GENRE_ID) references GENRES
 );
@@ -74,7 +74,6 @@ create table IF NOT EXISTS FRIENDS
         primary key,
     USER_ID           INTEGER,
     FRIEND_ID         INTEGER,
-    FRIENDSHIP_STATUS BOOLEAN,
     constraint FRIENDS_USERS_USER_ID_FK
         foreign key (USER_ID) references USERS,
     constraint FRIENDS_USERS_USER_ID_FK_2

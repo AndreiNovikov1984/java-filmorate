@@ -15,7 +15,7 @@ import java.util.*;
 public class FilmController {
     private final FilmService filmService;
 
-    @GetMapping
+    @GetMapping                     // метод получения всех фильмов
     public Collection<Film> getFilms() {        // метод получения списка фильмов
         return filmService.getFilms();
     }
@@ -29,6 +29,7 @@ public class FilmController {
     public Collection<Film> getFilmPopular(@RequestParam(defaultValue = "10", required = false) int count) {
         return filmService.getFilmPopular(count);
     }
+
 
     @PostMapping
     public Film postFilm(@RequestBody Film film) {      // метод добавления фильма

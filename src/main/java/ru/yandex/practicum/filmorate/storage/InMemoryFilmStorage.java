@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.support.Validation;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -50,5 +51,26 @@ public class InMemoryFilmStorage implements FilmStorage {
             films.put(film.getId(), film);
         }
         return film;
+    }
+
+    @Override
+    public Collection<Film> getFilmPopular(int count) {
+        return getFilms().stream()
+                .sorted((p0, p1) -> {
+                    int comp = (p1.getLikes().size() - (p0.getLikes().size()));
+                    return comp;
+                })
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void addLike(Integer filmId, Integer userID) {       // метод добавления лайка
+        getFilmById(filmId).getLikes().add(userID);
+    }
+
+    @Override
+    public void deleteLike(Integer filmId, Integer userID) {     // метод удаления лайка
+        getFilmById(filmId).getLikes().remove(userID);
     }
 }

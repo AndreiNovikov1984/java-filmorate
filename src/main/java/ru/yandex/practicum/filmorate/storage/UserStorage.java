@@ -13,5 +13,14 @@ public interface UserStorage {
     User addUser(User user);
 
     User refreshUser(User user);
+
+    Collection<User> getUsersFriends(Integer userId);
+
+    Collection<User> getUsersMutualFriends(Integer userId, Integer otherId);
+
+    void addFriend(Integer userId, Integer friendId);
+
+    void deleteFriend(Integer userId, Integer friendId);
+
 }
 

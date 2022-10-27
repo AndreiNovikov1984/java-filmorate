@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +33,7 @@ public class FilmService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Длина списка не может быть меньше 0");
         }
         log.info("Вывод списка самых популярных фильмов длиной {} ", count);
-        return filmStorage.getFilms().stream()
-                .sorted((p0, p1) -> {
-                    int comp = (p1.getLikes().size() - (p0.getLikes().size()));
-                    return comp;
-                })
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getFilmPopular(count);
     }
 
     public Film postFilm(Film film) {       // метод добавления фильма
@@ -57,13 +50,13 @@ public class FilmService {
 
     public void addLike(Integer filmId, Integer userID) {       // метод добавления лайка
         validationId(filmId, userID);
-        filmStorage.getFilmById(filmId).getLikes().add(userID);
+        filmStorage.addLike(filmId, userID);
         log.info("Лайк пользователя ID = {} фильму ID = {} добавлен", userID, filmId);
     }
 
     public void deleteLike(Integer filmId, Integer userID) {     // метод удаления лайка
         validationId(filmId, userID);
-        filmStorage.getFilmById(filmId).getLikes().remove(userID);
+        filmStorage.deleteLike(filmId, userID);
         log.info("Лайк пользователя ID = {} у фильма ID = {} удален", userID, filmId);
     }
 
