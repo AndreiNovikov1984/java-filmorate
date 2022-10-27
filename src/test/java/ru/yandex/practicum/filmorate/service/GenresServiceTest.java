@@ -31,15 +31,14 @@ public class GenresServiceTest {
     }
 
     @Test
-    public void getMpasbyId() {
+    public void getGenresbyId() {
         genres = genresService.getGenreById(1);
         assertNotNull(genres);
         assertEquals(1, genres.getId(), "Данные не получены");
-        assertEquals("Комедия", genres.getName(), "Данные не получены");
     }
 
     @Test
-    public void getMpasbyIncorrectId() {
+    public void getGenresbyIncorrectId() {
         ResponseStatusException exeption = Assertions.assertThrows(ResponseStatusException.class, () -> {
             genresService.getGenreById(-1);
         });
