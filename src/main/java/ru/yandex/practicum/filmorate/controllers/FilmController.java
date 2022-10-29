@@ -1,14 +1,12 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
-@Component
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor
@@ -33,14 +31,12 @@ public class FilmController {
 
     @PostMapping
     public Film postFilm(@RequestBody Film film) {      // метод добавления фильма
-        Film postFilm = filmService.postFilm(film);
-        return postFilm;
+        return filmService.postFilm(film);
     }
 
     @PutMapping
     public Film putFilm(@RequestBody Film film) {       // метод обновления фильма
-        Film putFilm = filmService.putFilm(film);
-        return putFilm;
+        return filmService.putFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")                  // метод добавления лайка

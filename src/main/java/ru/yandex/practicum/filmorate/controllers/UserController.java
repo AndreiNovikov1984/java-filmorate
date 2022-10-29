@@ -1,14 +1,12 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.*;
 
-@Component
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -27,14 +25,12 @@ public class UserController {
 
     @PostMapping
     public User postUser(@RequestBody User user) {  // метод добавления пользователя
-        User postUser = userService.postUser(user);
-        return postUser;
+        return userService.postUser(user);
     }
 
     @PutMapping
     public User putUser(@RequestBody User user) {   // метод обновления пользователя
-        User putUser = userService.putUser(user);
-        return putUser;
+        return userService.putUser(user);
     }
 
     @GetMapping("/{id}/friends")            // метод получения друзей пользователя

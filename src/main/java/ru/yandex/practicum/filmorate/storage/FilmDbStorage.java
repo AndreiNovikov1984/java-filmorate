@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,14 +21,12 @@ import java.util.*;
 
 @Component
 @Primary
+@Slf4j
 public class FilmDbStorage implements FilmStorage {
-    private static final Logger log = LoggerFactory.getLogger("FilmDbStorage");
-    JdbcTemplate jdbcTemplate;
-    MpaStorage mpaStorage;
+    private final JdbcTemplate jdbcTemplate;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.mpaStorage = mpaStorage;
     }
 
     @Override
