@@ -37,6 +37,10 @@ public class Validation {
             log.warn("Некорректный id фильма в запросе - {}", film.getId());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Некорректный id. Попробуйте еще раз.");
         }
+        if (film.getMpa() == null) {
+            log.warn("Некорректный запрос, не указан рейтинг фильма - {}", film.getId());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный id. Попробуйте еще раз.");
+        }
         answer = true;
         return answer;
     }
